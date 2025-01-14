@@ -6,9 +6,7 @@ const int maxn = 100010;
 int primo[maxn]; 
 
 void crivo(int n){
-    for(int i=1; i<=n; i++){
-        primo[i] = -1;
-    }
+    memset(primo, -1, sizeof(primo));
     for(int i = 2; i <= n; i++){
         if(primo[i] == -1){
             primo[i] = 1;
