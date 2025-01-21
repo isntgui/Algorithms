@@ -13,7 +13,7 @@ int main() {
 			cin >> p[i] >> v[i];
 		}
 		for (int i=0; i<=t; ++i) {
-			for (int j=0; j < n+1; ++j) {
+			for (int j=0; j<=n; ++j) {
 				if (p[j] <= i) 
 					dp[i] = max(dp[i], dp[i-p[j]] + v[j]);
 			}
