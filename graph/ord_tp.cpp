@@ -52,7 +52,7 @@ int main() {
     
     int t = 1;
     // cin >> t;
-    while (t--) solve(); // Resolver para o único caso de teste
+    while (t--) solve();
     
     return 0;
 }
