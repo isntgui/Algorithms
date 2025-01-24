@@ -2,6 +2,7 @@
 using namespace std;
 
 #define ll long long
+#define lsb(x) x&-x
 
 struct Bit {
     int n;
@@ -9,12 +10,12 @@ struct Bit {
     Bit(int _n=0) : n(_n), bit(n+1) {}
 
     void update(int i, ll x) {
-        for(++i; i<=n; i+=i&-i) bit[i] += x;
+        for(++i; i<=n; i+=lsb(i)) bit[i] += x;
     }
 
     ll qry(int i) {
         ll ret = 0;
-        for(++i; i; i-=i&-i) ret += bit[i];
+        for(++i; i; i-=lsb(i)) ret += bit[i];
         return ret;
     }
 };
