@@ -8,15 +8,15 @@ typedef pair<int, pair<int, int>> edge;
 
 class UionFind {
 private:
-	vector<int> p, rank;
+	vector<int> parent, rank;
 public:
 	UionFind(int n) {
-		p.assign(n+1, 0);
+		parent.assign(n+1, 0);
 		rank.assign(n+1, 0);
-		for(int i=0; i<=n; ++i) p[i]=i;
+		for(int i=0; i<=n; ++i) parent[i]=i;
 	}
 	int find(int i) {
-		return (p[i]==i) ? i : (p[i]=find(p[i]));
+		return (parent[i]==i) ? i : (parent[i]=find(parent[i]));
 	}
 	bool comp(int i, int j) {
 		return find(i)==find(j);
@@ -25,9 +25,9 @@ public:
 		if(!comp(i, j)) {
 			int x = find(i), y=find(j);
 			if(rank[x]>rank[y])
-				p[y] = x;
+				parent[y] = x;
 			else {
-				p[x] = y;
+				parent[x] = y;
 				if(rank[x]==rank[y])
 					++rank[y];
 			}
