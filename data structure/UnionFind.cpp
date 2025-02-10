@@ -1,34 +1,44 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-#define F first
-#define S second
+const int mxn = 1e4+10;
 
-class UionFind {
-private:
-	vector<int> p, rank;
-public:
-	UionFind(int n) {
-		p.assign(n+1, 0);
-		rank.assign(n+1, 0);
-		for(int i=0; i<=n; ++i) p[i]=i;
-	}
-	int find(int i) {
-		return (p[i]==i) ? i : (p[i]=find(p[i]));
-	}
-	bool comp(int i, int j) {
-		return find(i)==find(j);
-	}
-	void unioSet(int i, int j) {
-		if(!comp(i, j)) {
-			int x = find(i), y=find(j);
-			if(rank[x]>rank[y])
-				p[y] = x;
-			else {
-				p[x] = y;
-				if(rank[x]==rank[y])
-					++rank[y];
-			}
-		}
-	}
-};
+int parent[mxn], height[mxn];
+
+int find(int i) {
+    return (i==parent[i]?i:parent[i] = find(parent[i]));
+}
+
+void join(int i, int j) {
+    int x = find(i), y = find(j);
+    if(!(x==y)) {
+        if(height[x]>height[y])
+            parent[y] = x;
+        else {
+            parent[x] = y;
+            if(height[x]==height[y])
+                ++height[y];
+        }
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    memset(height, 0, sizeof(height));
+    iota(parent, parent+mxn, 0); // inicializa o vetor em sequencia, dependendo do intervalo
+
+    int _max, n, m;
+    while(cin >> n >> m) {
+        _max = max(_max, max(n, m));
+        join(n, m);
+    }
+
+    for(int i=0; i<=_max; ++i)
+        cout << "Antecessor[" << i << "] = " << parent[i] << ".\n";
+    cout << "\n";
+    for(int i=0; i<=_max; ++i)
+        cout << "Altura[" << i << "] = " << height[i] << ".\n";
+}
