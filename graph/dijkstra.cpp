@@ -6,7 +6,7 @@ using namespace std;
 
 const int mxN=1010;
 
-int n, m, d[mxN+1], s;
+int n, m, d[mxN+1], s, f;
 vector<ar<int, 2>> adj[mxN+1];
 
 int dij(int w, int f) {
@@ -35,8 +35,8 @@ void solve() {
 		adj[x].push_back({w, y});
 		adj[y].push_back({w, x});
 	}
-	cin >> s;
-	cout << dij(s, 4) << "\n";
+	cin >> s >> f;
+	cout << dij(s, f) << "\n";
 }
 
 int main() {
