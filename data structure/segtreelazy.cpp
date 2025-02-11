@@ -6,7 +6,7 @@ const int mxN = 1e5;
 int lazy[4*mxN], st[4*mxN], a[mxN+1];
 
 void bld(int node, int l, int r) {
-	if(l==r) {
+    if(l==r) {
         st[node] = a[l];
         return;
     }
