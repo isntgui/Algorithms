@@ -2,7 +2,7 @@
 using namespace std;
 
 vector<int> adj[1011];
-int n, m;
+int n, m, ini, fim;
 
 string bfs(int w, int f) {
 	vector<bool> v(n+1, 0);
@@ -28,7 +28,8 @@ void solve() {
 		adj[x].push_back(y);
 		adj[y].push_back(x);
 	}
-	cout << bfs(1, 5) << "\n";
+	cin >> ini >> fim;
+	cout << bfs(ini, fim) << "\n";
 }
 
 int main() {
