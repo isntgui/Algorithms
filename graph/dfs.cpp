@@ -2,7 +2,7 @@
 using namespace std;
 
 const int mxN=1e4+10;
-int n, m;
+int n, m, ini, fim;
 bool v[mxN+1];
 vector<int> adj[mxN];
 
@@ -21,8 +21,9 @@ void solve() {
 		adj[x].push_back(y);
 		adj[y].push_back(x);
 	}
-	dfs(1);
-	if(v[5])
+	cin >> ini >> fim;
+	dfs(ini);
+	if(v[fim])
 		cout << "Encontrado\n";
 	else
 		cout << "Nao encontrado\n";
