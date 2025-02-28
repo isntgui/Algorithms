@@ -53,8 +53,5 @@ int main() {
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
-	for(int i=1; i<=10; ++i)
-		a[i]=i;
-	bld(1, 1, 10);
-    cout << qry(1, 1, 10, 1, 3) << "\n";
+	;
 }
