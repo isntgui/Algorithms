@@ -13,23 +13,19 @@ int main() {
     cout.tie(nullptr);
     
     cin >> n >> m;
-    memset(adj, 0x3f, sizeof(adj));
+    memset(adj, inf, sizeof(adj));
     for(int i=0, u, v, w; i<m; ++i) {
         cin >> u >> v >> w;
-        if(adj[u][v]>100||adj[u][v]>w)
-            adj[u][v] = adj[v][u] = w;
+        adj[u][v] = adj[v][u] = w;
     }
     for(int i=0; i<n; ++i) adj[i][i] = 0;
     for(int k=0; k<n; ++k)
         for(int i=0; i<n; ++i)
             for(int j=0; j<n; ++j)
                 adj[i][j] = min(adj[i][j], adj[i][k]+adj[k][j]);
-    int ans = inf;
     for(int i=0; i<n; ++i) {
-        int cur_d = -1;
         for(int j=0; j<n; ++j)
-            cur_d = max(cur_d, adj[j][i]);
-        ans = min(ans, cur_d);
+            cout << adj[i][j] << " ";
+        cout << "\n";
     }
-    cout << ans << "\n";
 }
