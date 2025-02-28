@@ -6,7 +6,7 @@ using namespace std;
 
 const int mxN=400;
 
-int tree[4*mxN], n, a[mxn];
+int tree[4*mxN], n, a[mxN];
 
 int build(int node, int l, int r) {
 	if(l==r) return tree[node] = a[l];
