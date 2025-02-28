@@ -21,16 +21,22 @@ int qry(int i) {
     return ret;
 }
 
+// Busca Binaria na estrutura de dados bit
+int bs_bit(int v) {
+    int s=0, p=0;
+    for(int i=30; i>=0; --i) {
+            if (p + (1 << i) <= n && s + ft[p + (1 << i)] <= v) {
+                s += ft[p + (1 << i)];
+                p += (1 << i);
+}
+    }
+    return p;
+}
+
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    cin >> n >> q;
-    for(int i=0; i<n; ++i)
-        cin >> a[i], upd(i, a[i]);
-    while(q--) {
-        cin >> r >> l;
-        cout << qry(r)-qry(l-1) << "\n";
-    }
+    ;
 }
