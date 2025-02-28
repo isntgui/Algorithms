@@ -52,15 +52,13 @@ void solve() {
 	int v, a;
 	while(cin >> v >> a && v) {
 		vector<edge> adj;
-		int tc=0;
 		for(int i=0, u, w, p; i<a; ++i) {
 			cin >> u >> w >> p;
 			adj.push_back({p, {u, w}});
-			tc+=p;
 		}
 		sort(adj.begin(), adj.end());
 		int eit = kruskal(v, adj);
-		cout << tc-eit << "\n";
+		cout << eit << "\n";
 	}
 }
 
