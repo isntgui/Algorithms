@@ -40,6 +40,11 @@ int32_t main() {
     k = 1;
     n = n|(1<<k);
     cout << n << "\n"; // 7 = 111
+
+    // Operação reversa (desliga o k bit de n)
+    n = 5, k = 2;
+    n = n&~(1<<k);
+    cout << n << "\n";
     
     return 0;
 }
