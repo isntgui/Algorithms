@@ -37,11 +37,10 @@ int32_t main() {
         cin >> l >> r;
         int k = log_n(r - l + 1);
         int ans = 0;
-        for(int i=log_n(r-l+1); i>=0; --i) {
+        for(int i=k; i>=0; --i) {
             if((1<<i) <= (r-l+1))
                 ans+=sp[l][i], l+=(1<<i);
         }
-        // int k = log_n(r-l+1);
         // cout << min(sp[l][k], sp[r-(1<<k)+1][k]) << "\n";
         cout << ans << "\n";
     }
