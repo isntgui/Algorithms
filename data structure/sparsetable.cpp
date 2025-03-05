@@ -30,7 +30,7 @@ int32_t main() {
     
     cin >> n >> q;
     for(int i = 1; i <= n; ++i)
-    cin >> a[i];
+        cin >> a[i];
     bld();
     while(q--) {
         int l, r;
