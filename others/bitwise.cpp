@@ -6,9 +6,9 @@ using namespace std;
 int n, k, j;
 
 int32_t main() {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
-	cout.tie(0);
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
     // Operação and
     cout << (5&4) << "\n"; // 5 = 101, 4 = 100, 4 = 100
