@@ -1,50 +1,41 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-#define ll long long
-#define ar array
-
-const int mxN=1010;
-
-int n, m, d[mxN+1], s, f;
-vector<ar<int, 2>> adj[mxN+1];
-
-int dij(int w, int f) {
-	memset(d, 0x3f, sizeof(d));
-	d[w]=0;
-	priority_queue<ar<int, 2>, vector<ar<int, 2>>, greater<ar<int, 2>>> pq;
-	pq.push({0, s});
-	while(pq.size()>0) {
-		ar<int, 2> u = pq.top(); pq.pop();
-		if(u[0]>d[u[1]])
-			continue;
-		for(ar<int, 2> vz : adj[u[1]]) {
-			if(d[vz[1]]>u[0]+vz[0]) {
-				d[vz[1]]=u[0]+vz[0];
-				pq.push({d[vz[1]], vz[1]});
-			}
-		}
-	}
-	return d[f];
-}
-
-void solve() {
-	cin >> n >> m;
-	for(int i=0, w, x, y; i<m; ++i) {
-		cin >> x >> y >> w;
-		adj[x].push_back({w, y});
-		adj[y].push_back({w, x});
-	}
-	cin >> s >> f;
-	cout << dij(s, f) << "\n";
-}
-
 int main() {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
-	cout.tie(0);
+    ios::sync_with_stdio(0);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
 
-	int t=1;
-	// cin >> t;
-	while(t--) solve();
+    int vertices, arestas;
+    cin >> vertices >> arestas;
+    vector<vector<pair<int, int>>> adj; // (peso, destino)
+    adj.resize(vertices+1);
+    for(int i=0; i<arestas; ++i) {
+        int x, y, w;
+        cin >> x >> y >> w;
+        adj[x].emplace_back(w, y);
+        adj[y].emplace_back(w, x);
+    }
+    int inicio;
+    cin >> inicio;
+    // Dijkstra
+    vector<int> dist(vertices+1, (int)1e9+10);
+    dist[inicio] = 0;
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.emplace(0, inicio);
+    while(!pq.empty()) {
+        auto [d, u] = pq.top();
+        pq.pop();
+        if(d>dist[u])
+            continue;
+        for(auto [ps, vz] : adj[u]) {
+            if(ps+d < dist[vz]) {
+                dist[vz] = ps+d;
+                pq.emplace(dist[vz], vz);
+            }
+        }
+    }
+    for(int i=1; i<=vertices; ++i)
+        cout << dist[i] << " ";
+    cout << "\n";
 }
