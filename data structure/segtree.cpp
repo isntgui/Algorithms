@@ -1,51 +1,53 @@
-
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-#define int long long
+const int mxn=1e5+10;
 
-const int mxN=400;
+int n, q, st[mxn], a[mxn];
 
-int tree[4*mxN], n, a[mxN];
-
-int build(int node, int l, int r) {
-	if(l==r) return tree[node] = a[l];
-	int m = (l+r)/2;
-	return tree[node] = build(2*node, l, m) + build(2*node+1, m+1, r);
-}
-
-int query(int node, int l, int r, int a, int b) {
-	if(b<l||r<a) return 0;
-	if(a<=l&&r<=b) return tree[node];
-	int m = (l+r)/2;
-	return query(2*node, l, m, a, b) + query(2*node+1, m+1, r, a, b);
-}
-
-void update(int node, int l, int r, int i, int x) {
-	if(x<l||r<i) return;
-	if(l==r) {
-		tree[node] = x;
-		return;
-	}
-	int m=(l+r)/2;
-	update(2*node, l, m, i, x);
-	update(2*node+1, m+1, r, i, x);
-	tree[node] = tree[2*node] + tree[2*node+1];
-}
-
-int bs_st(int node, int l, int r, int k) {
-    int s=0, p=0;
-    for(int i=30; i>=0; --i) {
-        if(p+(1<<i) <= n && s+query(1, 1, n, p+1, p+(1<<i)) <= k)
-            s+=query(1, 1, n, p+1, p+(1<<i)), p+=(1<<i);
+void bld(int node, int l, int r) {
+    if(l==r) {
+        st[node] = a[l];
+        return ;
     }
-    return p;
+    int mid = (l+r)/2;
+    bld(2*node, l, mid);
+    bld(2*node+1, mid+1, r);
 }
 
-int32_t main() {
+void upd(int node, int l, int r, int i, int v) {
+    if(l==r) {
+        st[node] = v;
+        return ;
+    }
+    int mid = (l+r)/2;
+    if(i<=mid)
+        upd(2*node, l, mid, i, v);
+    else
+        upd(2*node+1, mid+1, r, i, v);
+    st[node] = st[2*node]+st[2*node+1];
+}
+
+int qry(int node, int l, int r, int i, int j) {
+    if(i<=l&&j>=r)
+        return st[node];
+    if(j<l||i>r)
+        return 0;
+    int mid = (l+r)/2;
+    return qry(2*node, l, mid, i, j)+qry(2*node+1, mid+1, r, i, j);
+}
+
+int main() {
     ios::sync_with_stdio(0);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
-    
-    ;
+    cin.tie(0);
+    cout.tie(0);
+
+    while(cin >> n >> q) {
+        for(int i=1; i<=n; ++i)
+            cin >> a[i];
+        bld(1, 1, n);
+        while(q--) {
+            
+        }
+    }
 }
