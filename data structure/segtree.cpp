@@ -42,12 +42,5 @@ int main() {
     cin.tie(0);
     cout.tie(0);
 
-    while(cin >> n >> q) {
-        for(int i=1; i<=n; ++i)
-            cin >> a[i];
-        bld(1, 1, n);
-        while(q--) {
-            
-        }
-    }
+    ;
 }
