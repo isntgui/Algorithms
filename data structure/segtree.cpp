@@ -3,7 +3,7 @@ using namespace std;
 
 const int mxn=1e5+10;
 
-int n, q, st[mxn], a[mxn];
+int n, q, st[4*mxn], a[mxn];
 
 void bld(int node, int l, int r) {
     if(l==r) {
