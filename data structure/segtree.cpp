@@ -13,6 +13,7 @@ void bld(int node, int l, int r) {
     int mid = (l+r)/2;
     bld(2*node, l, mid);
     bld(2*node+1, mid+1, r);
+    st[node] = st[2*node]+st[2*node+1];
 }
 
 void upd(int node, int l, int r, int i, int v) {
