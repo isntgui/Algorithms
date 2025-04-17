@@ -1,74 +1,64 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-#define ll long long
+#define int int64_t
 
-const int mxN=5e4+500, mxL=20;
+const int mxn = 1e5+10, mxl = 30;
 
-int n, x, depth[mxN+1], pai[mxN+1], c[mxN],
-	par[mxN], ancestral[mxN][mxL];
+vector<int> adj[mxn];
+int depth[mxn], pai[mxn], up[mxn][mxl], n, m;
 
-vector<int> adj[mxN];
+void bld() {
+	fill(pai, pai+n+1, -1);
+	fill(depth, depth+n+1, -1);
+	memset(up, -1, sizeof up);
+}
 
-void dfs(int w) {
-	for(int i=0; i<(int)adj[w].size(); ++i) {
-		int v = adj[w][i];
-		if(depth[v]==-1) {
-			pai[v] = w;
-			depth[v] = depth[w]+1;
-			dfs(v);
+void dfs(int w=1, int p=-1, int d=0) {
+	pai[w] = p;
+	depth[w] = d;
+	up[w][0] = p;
+	for(int i=1; i<mxl; ++i) 
+		if(up[w][i-1]!=-1)
+			up[w][i] = up[up[w][i-1]][i-1];
+	for(int vz : adj[w]) {
+		if(vz!=p)
+			dfs(vz, w, d+1);
+	}
+}
+
+int lca(int u, int v) {
+	if(depth[u] < depth[v]) swap(u, v);
+	for(int i=mxl-1; i>=0; --i)
+		if(depth[u]-(1<<i) >= depth[v])
+			u = up[u][i];
+	if(u==v) return u;
+	for(int i=mxl-1; i>=0; --i)
+		if(up[u][i]!=up[v][i]) {
+			u = up[u][i];
+			v = up[v][i];	
 		}
-	}
+	return pai[u];
 }
 
-int lca(int a, int b) {
-	if (depth[a] < depth[b]) swap(a, b);
-	for(int i=mxL-1; i>=0; --i)
-		if(depth[a] - (1<<i) >= depth[b])
-			a = ancestral[a][i];
-	if(a==b) return a;
-	for(int i=mxL-1; i>=0; --i) 
-		if(ancestral[a][i]!=-1&&ancestral[a][i] != ancestral[b][i])
-			a = ancestral[a][i], b=ancestral[b][i];
-	return pai[a];
-}
+int32_t main() {
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
 
-void solve() {
-	cin >> n;
-	for(int i=1, x; i<=n; ++i) {
-		cin >> x;
-		if(c[x]) {
-			par[i] = c[x];
-			par[c[x]] = i;
-		}
-		c[x] = i;
+	cin >> n >> m;
+	bld();
+	for(int i=0; i<m; ++i) {
+		int a, b;
+		cin >> a >> b;
+		adj[a].push_back(b);
+		adj[b].push_back(a);
 	}
-	for(int i=1, w, x; i<n; ++i) {
-		cin >> w >> x;
-		adj[w].push_back(x);
-		adj[x].push_back(w);
+	dfs();
+	int q;
+	cin >> q;
+	while(q--) {
+		int u, v;
+		cin >> u >> v;
+		cout << lca(u, v) << "\n";
 	}
-	memset(depth, -1, sizeof(depth));
-	memset(pai, -1, sizeof(pai));
-	memset(ancestral, -1, sizeof(ancestral));
-	depth[1] = 0;
-	dfs(1);
-	for(int i=1; i<=n; ++i) ancestral[i][0] = pai[i];
-	for(int j=1; j<mxL; ++j)
-		for(int i=1; i<=n; ++i)
-			ancestral[i][j] = ancestral[ancestral[i][j-1]][j-1];
-	ll ans=0;
-	for(int i=1; i<=n; ++i)
-		ans+=(ll)(depth[i]+depth[par[i]]-2*depth[lca(i, par[i])]);
-	cout << ans/2 << "\n";
-}
-
-int main() {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
-	cout.tie(0);
-
-	int t=1;
-	// cin >> t;
-	while(t--) solve();
 }
