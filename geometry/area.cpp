@@ -30,10 +30,6 @@ int main() {
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
-	double a1 = solve();
-	double a2 = solve();
-	char ans='A';
-	if(a2>a1)
-		ans='B';
-	cout << "terreno " << ans << "\n";
+	double ans = solve();
+	cout << ans << "\n";
 } 
