@@ -37,9 +37,9 @@ int invMult(int a){
 }
 
 int32_t main() {
-	ios::sync_with_stdio(0);
-	cin.tie(nullptr);
-	cout.tie(nullptr);
+    ios::sync_with_stdio(0);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
 
     cout << add(5, 3) << "\n";
     cout << mul(10, 8) << "\n";
