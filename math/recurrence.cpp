@@ -21,14 +21,10 @@ mat mult(mat &a, mat &b) {
         for(int k=0; k<sz(b); ++k) {
             for(int j=0; j<sz(b[0]); ++j) {
                 ret[i][j]+=a[i][k]*b[k][j];
-                if(ret[i][j]>=M2)
-                    ret[i][j] -= M2;
+                ret[i][j]%=M;
             }
         }
     }
-    for(int i=0; i<sz(a); ++i)
-        for(int j=0; j<sz(b[0]); ++j)
-            ret[i][j]%=M;
     return ret;
 }
 
