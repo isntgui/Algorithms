@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-#define int long long
+#define int int64_t
 
 const int M=1e9+7; // 10⁹+7
 
