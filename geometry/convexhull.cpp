@@ -44,10 +44,6 @@ void makeconv() {
 	for(int i=it2 - 1; i>0; --i) conv.push_back(lower[i]);
 }
 
-double d(const Pt &x, const Pt &y) {
-	return sqrt(pow(y.x-x.x, 2)+pow(y.y-x.y, 2));
-}
-
 void init() {
 	conv.clear();
 	lower.clear();
@@ -67,12 +63,8 @@ int main() {
 			cin >> pts[i].x >> pts[i].y;
 		sort(pts.begin(), pts.end());
 		makeconv();
-		double ans = 0;
-		for(size_t i=0; i<conv.size(); ++i) {
-			Pt p1 = conv[i], p2 = conv[(i+1)%(int)conv.size()];
-			ans+=d(p1, p2);
+		for(auto e : conv) {
+		  cout << e.x << " " << e.y << "\n";
 		}
-		cout << "Tera que comprar uma fita de tamanho ";
-		cout << fixed << setprecision(2) << ans << ".\n";
 	}
 }
