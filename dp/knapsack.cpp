@@ -10,8 +10,9 @@ int main() {
 	cin >> n >> w;
 	for(int i=0; i<n; ++i)
 		cin >> p[i] >> v[i];
-	for(int i=0; i<n; ++i)
-		for(int j=w; j>=p[i]; --j)
-			dp[j] = max(dp[j], dp[j-p[i]]+v[i]);
+	for(int i=0; i<=w; ++i)
+	  for(int j=0; j<n+1; ++j)
+	    if(p[j]<=i)
+			dp[i] = max(dp[i], dp[i-p[j]]+v[j]);
 	cout << dp[w] << "\n";
 }
