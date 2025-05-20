@@ -18,7 +18,7 @@ void bld(int node, int l, int r) {
 
 void unlazy(int node, int l, int r) {
 	if(lazy[node]==0) return ;
-	st[node] = lazy[node];
+	st[node] += (r-l+1) * lazy[node];
 	if(l!=r) {
 		lazy[2*node] = lazy[node];
 		lazy[2*node+1] = lazy[node];
