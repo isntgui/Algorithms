@@ -1,58 +1,65 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-const int mxN = 5e4+1e2;
+vector<int> kahnTopoSort(int n, const vector<vector<int>>& adj) {
+    vector<int> in_degree(n, 0);
 
-int grauEn[mxN];
-vector<int> adj[mxN];
-
-vector<int> ord_tp(int v) {
-    vector<int> lista;
-    queue<int> q;
-    for (int i = 1; i <= v; ++i)
-        if (grauEn[i] == 0)
-            q.push(i);
-    while (!q.empty()) {
-        int V = q.front(); q.pop();
-        lista.push_back(V);
-        for (int w : adj[V]) {
-            --grauEn[w];
-            if (grauEn[w] == 0)
-                q.push(w);
+    for (int u = 0; u < n; ++u) {
+        for (int v : adj[u]) {
+            in_degree[v]++;
         }
     }
-    if ((int)lista.size() != v)
-        throw runtime_error("O grafo possui ciclos");
-    
-    return lista;
-}
 
-void solve() {
-    int v;
-    cin >> v;
-    for (int i = 0, x, y; i < v; ++i) {
-        cin >> x >> y;
-        ++grauEn[y];
-        adj[x].push_back(y);
+    queue<int> q;
+    for (int i = 0; i < n; ++i) {
+        if (in_degree[i] == 0)
+            q.push(i);
     }
-    try {
-        vector<int> ans = ord_tp(v);
-        cout << "Ordenação topologica: ";
-        for (int v : ans) 
-            cout << v << " ";
-        cout << "\n";
-    } catch (const runtime_error &e) {
-        cout << e.what() << "\n";
+
+    vector<int> topo_order;
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        topo_order.push_back(u);
+
+        for (int v : adj[u]) {
+            in_degree[v]--;
+            if (in_degree[v] == 0) {
+                q.push(v);
+            }
+        }
     }
+
+    if ((int)topo_order.size() != n) {
+        return {};
+    }
+
+    return topo_order;
 }
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    
-    int t = 1;
-    // cin >> t;
-    while (t--) solve();
+    int n, m;
+    cin >> n >> m;
+
+    vector<vector<int>> adj(n);
+
+    for (int i = 0; i < m; ++i) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+    }
+
+    vector<int> result = kahnTopoSort(n, adj);
+
+    if (result.empty()) {
+        cout << "O grafo possui ciclo. Ordenação topológica nao e possivel.\n";
+    } else {
+        cout << "Ordenacao topologica:\n";
+        for (int u : result) {
+            cout << u << " ";
+        }
+        cout << "\n";
+    }
     
     return 0;
 }
