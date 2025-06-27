@@ -6,16 +6,14 @@ using namespace std;
 const int mxn = 1e5+10, mxl = 30;
 
 vector<int> adj[mxn];
-int depth[mxn], pai[mxn], up[mxn][mxl], n, m;
+int depth[mxn], up[mxn][mxl], n, m;
 
 void bld() {
-	fill(pai, pai+n+1, -1);
 	fill(depth, depth+n+1, -1);
 	memset(up, -1, sizeof up);
 }
 
 void dfs(int w=1, int p=-1, int d=0) {
-	pai[w] = p;
 	depth[w] = d;
 	up[w][0] = p;
 	for(int i=1; i<mxl; ++i) 
@@ -29,8 +27,9 @@ void dfs(int w=1, int p=-1, int d=0) {
 
 int lca(int u, int v) {
 	if(depth[u] < depth[v]) swap(u, v);
+	int k = depth[a] - depth[b];
 	for(int i=mxl-1; i>=0; --i)
-		if(depth[u]-(1<<i) >= depth[v])
+		if(k&(1<<j))
 			u = up[u][i];
 	if(u==v) return u;
 	for(int i=mxl-1; i>=0; --i)
@@ -38,7 +37,7 @@ int lca(int u, int v) {
 			u = up[u][i];
 			v = up[v][i];	
 		}
-	return pai[u];
+	return up[a][0];
 }
 
 int32_t main() {
