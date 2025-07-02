@@ -9,8 +9,8 @@ bool vis[mxn];
 vector<int> adj[mxn];
 
 void bfs(int w) {
-    memset(vis, 0, sizeof vis);
-    memset(dist, 0, sizeof dist);
+    fill(vis, vis + n + 1, false);
+    fill(dist, dist + n + 1, 0);
     vis[w]=1;
     queue<int> q;
     q.push(w);
