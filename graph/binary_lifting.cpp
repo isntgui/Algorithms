@@ -1,52 +1,47 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int mxl=30, mxn=1e5+10;
+#define int int64_t
 
-int parent[mxn][mxl], depth[mxn], n, m, q, k, v;
+const int mxn = 1e5+10, mxl = 20;
+
+int n, q, up[mxn][mxl], depth[mxn];
 vector<int> adj[mxn];
 
-void bld() {
-    memset(parent, -1, sizeof(parent));
-    memset(depth, -1, sizeof(depth));
+void dfs(int u, int p) {
+	depth[u] = depth[p]+1;
+	up[u][0] = p;
+	for(int i=1; i<mxl; i++)
+		up[u][i] = up[up[u][i-1]][i-1];
+	for(int v : adj[u])
+		if(v!=p)
+			dfs(v, u);
 }
 
-void dfs(int node=0, int par=-1, int d=0) {
-    depth[node] = d;
-    parent[node][0] = par;
-    for(int i=1; i<=mxl; ++i)
-        if(parent[node][i-1] != -1)
-            parent[node][i] = parent[parent[node][i-1]][i-1];
-    for(auto ch : adj[node])
-        if(ch!=par)
-            dfs(ch, node, d+1);
+int bl(int u, int k) {
+	if(depth[u]<k) return -1;
+	for(int i=mxl-1; i>=0; i--)
+		if((k>>i)&1)
+			u = up[u][i];
+	return u;
 }
 
-int bl(int node, int k) {
-    if(depth[node]<k)
-        return -1;
-    for(int i=mxl; i>=0; --i)
-        if(k>=(1 << i))
-            node = parent[node][i], k -= (1 << i);
-    return node;
-}
+int32_t main() {
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
 
-int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
-    
-    cin >> n >> m;
-    bld();
-    for(int i=0, x, y; i<m; ++i) {
-        cin >> x >> y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
-    }
-    dfs();
-    cin >> q;
-    while(q--) {
-        cin >> v >> k;
-        cout << bl(v, k) << "\n";
-    }
+	cin >> n >> q;
+	for(int i=1; i<n; i++) {
+		int a, b;
+		cin >> a >> b;
+		adj[a].push_back(b);
+		adj[b].push_back(a);
+	}
+	depth[0] = -1;
+	dfs(1, 0);
+	while(q--) {
+		int u, k;
+		cin >> u >> k;
+		cout << bl(u, k) << "\n";
+	}
 }
