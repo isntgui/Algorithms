@@ -43,6 +43,16 @@ int qry(int node, int l, int r, int i, int j) {
     return func(qry(2*node, l, mid, i, j), qry(2*node+1, mid+1, r, i, j));
 }
 
+int bs_seg(int node, int l, int r, int k) {
+    if (st[node] < k) return -1;
+    if (l == r) return l;
+    int m = (l + r) / 2;
+    if (st[2*node] >= k)
+        return bs_seg(2*node, l, m, k);
+    else
+        return bs_seg(2*node+1, m+1, r, k - st[2*node]);
+}
+
 int main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
