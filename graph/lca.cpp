@@ -3,58 +3,50 @@ using namespace std;
 
 #define int int64_t
 
-const int mxn = 1e5+10, mxl = 30;
+const int mxn = 1e5+10, mxl=20;
 
+int up[mxn][mxl], depth[mxn], n, q;
 vector<int> adj[mxn];
-int depth[mxn], up[mxn][mxl], n, m;
 
-void bld() {
-	fill(depth, depth+n+1, -1);
-	memset(up, -1, sizeof up);
-}
-
-void dfs(int w=1, int p=-1, int d=0) {
-	depth[w] = d;
-	up[w][0] = p;
-	for(int i=1; i<mxl; ++i) 
-		if(up[w][i-1]!=-1)
-			up[w][i] = up[up[w][i-1]][i-1];
-	for(int vz : adj[w]) {
-		if(vz!=p)
-			dfs(vz, w, d+1);
-	}
+void dfs(int u, int p) {
+	depth[u] = depth[p]+1;
+	up[u][0] = p;
+	for(int i=1; i<mxl; i++)
+		up[u][i] = up[up[u][i-1]][i-1];
+	for(int v : adj[u])
+		if(v!=p)
+			dfs(v, u);
 }
 
 int lca(int u, int v) {
 	if(depth[u] < depth[v]) swap(u, v);
-	int k = depth[a] - depth[b];
-	for(int i=mxl-1; i>=0; --i)
-		if(k&(1<<j))
+	int k = depth[u] - depth[v];
+	for(int i=mxl-1; i>=0; i--)
+		if((k>>i)&1)
 			u = up[u][i];
 	if(u==v) return u;
-	for(int i=mxl-1; i>=0; --i)
+	for(int i=mxl-1; i>=0; i--) {
 		if(up[u][i]!=up[v][i]) {
 			u = up[u][i];
-			v = up[v][i];	
+			v = up[v][i];
 		}
-	return up[a][0];
+	}
+	return up[u][0];
 }
 
 int32_t main() {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 
-	cin >> n >> m;
-	bld();
-	for(int i=0; i<m; ++i) {
+	cin >> n >> q;
+	for(int i=1; i<n; i++) {
 		int a, b;
 		cin >> a >> b;
 		adj[a].push_back(b);
 		adj[b].push_back(a);
 	}
-	dfs();
-	int q;
-	cin >> q;
+	depth[0] = -1;
+	dfs(1, 0);
 	while(q--) {
 		int u, v;
 		cin >> u >> v;
