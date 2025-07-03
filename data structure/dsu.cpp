@@ -3,11 +3,11 @@ using namespace std;
 
 #define int int64_t
 
-class UF {
+class DSU {
     private:
         vector<int> peso, pai, size;
     public:
-        UF(int n) {
+        DSU(int n) {
             pai.resize(n+1);
             peso.resize(n+1);
             size.resize(n+1, 1);
