@@ -19,7 +19,7 @@ class DSU {
         }
 
         // Union by rank & size
-        void joint(int i, int j) {
+        void join(int i, int j) {
             i = find(i), j = find(j);
             if(i==j) return ;
             if(peso[i]>peso[j]) {
