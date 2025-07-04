@@ -14,7 +14,6 @@ struct Node {
     }
 };
 
-
 Node* bld(const vector<int> &node, int l, int r) {
     if (l == r) return new Node(node[l]);
     int mid = (l + r) / 2;
