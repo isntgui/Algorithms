@@ -64,5 +64,3 @@ int32_t main() {
         for(auto it : ans) cout << it << " ";
     cout << "\n";
 }
-
-// Bridge (é uma aresta que, caso seja removida aumenta o número de componentes em um grafo)
