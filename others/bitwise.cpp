@@ -48,25 +48,40 @@ int32_t main() {
 
     // ================================================================== BITSET ==================================================================
 
-    // init bitwise
+    // init bitset
     bitset<8> a("10"); // 00000010
     bitset<8> b(5); // 00000101
     a = 0b10101010; // 10101010
 
     // functions bitset  
-    cout << a.all() << "\n"; // a == 11111
-    a = ~a; // a_i = a_i ^ 1;
+    cout << a.all() << "\n"; // if all a_i = 1, so true
     cout << a << "\n";
     cout << a.count() << "\n"; // count(a_i == 1)
+    cout << a.any() << "\n"; // if any a_i = 1, so true
+    cout << a.none() << "\n"; // if all a_i = 0, so true
+    cout << a.size() << "\n"; // size of bitset
     cout << b[1] << "\n";
+    a = ~a; // a_i = a_i ^ 1;
     b.flip(1); // b_i ^= 1
     b.set(1); // b_i = 1
     b.reset(1); // b_i = 0
 
-    // bitwise operators
+    // bitset operators
     a = 11, b = 4;
     cout << (a^b) << "\n";
     cout << (a|b) << "\n";
     cout << (a&b) << "\n";
+    cout << (a<<1) << "\n";
+    cout << (b>>1) << "\n";
+
+    // Comp
+    cout << (a!=b) << "\n";
+    b = a;
+    cout << (a==b) << "\n";
+
+    // bitset -> int
+    cout << b.to_ulong() << "\n";
+    cout << b.to_ullong() << "\n";
+    cout << b.to_string() << "\n";
     return 0;
 }
