@@ -45,6 +45,28 @@ int32_t main() {
     n = 5, k = 2;
     n = n&~(1<<k);
     cout << n << "\n";
-    
+
+    // ================================================================== BITSET ==================================================================
+
+    // init bitwise
+    bitset<8> a("10"); // 00000010
+    bitset<8> b(5); // 00000101
+    a = 0b10101010; // 10101010
+
+    // functions bitset  
+    cout << a.all() << "\n"; // a == 11111
+    a = ~a; // a_i = a_i ^ 1;
+    cout << a << "\n";
+    cout << a.count() << "\n"; // count(a_i == 1)
+    cout << b[1] << "\n";
+    b.flip(1); // b_i ^= 1
+    b.set(1); // b_i = 1
+    b.reset(1); // b_i = 0
+
+    // bitwise operators
+    a = 11, b = 4;
+    cout << (a^b) << "\n";
+    cout << (a|b) << "\n";
+    cout << (a&b) << "\n";
     return 0;
 }
