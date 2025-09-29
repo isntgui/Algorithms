@@ -36,6 +36,13 @@ int invMult(int a){
     return exp(a, M-2);
 }
 
+int remainder(string num, int base, int mod) {
+    int resp = 0;
+    for(int i=0; i<(int)num.size(); i++)
+        resp = ((num[i]-'0') + resp * base) % mod;
+    return resp;
+}
+
 int32_t main() {
     ios::sync_with_stdio(0);
     cin.tie(nullptr);
@@ -47,4 +54,5 @@ int32_t main() {
     cout << exp(3, 7) << "\n";
     cout << invAdd(10) << "\n";
     cout << invMult(10) << "\n";
+    cout << remainder("10", 10, 4) << "\n";
 }
