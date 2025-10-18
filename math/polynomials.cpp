@@ -1,155 +1,100 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-struct Polynomius {
+#ifdef LOCAL
+    #include "debugging.h"
+#endif
+
+struct Polynomials {
+
     vector<int> pl;
+    int size;
+    int remainder;
 
-    explicit Polynomius(const vector<int>& a = {}) : pl(a) {
-        trim();
-    }
+    Polynomials(vector<int> a = {}) : size(a.size()), pl(a), remainder(0) {}
 
-    void trim() {
-        while (!pl.empty() && pl.back() == 0)
-            pl.pop_back();
-    }
-
-    int deg() const { return (int)pl.size() - 1; }
-
-    Polynomius operator+(const Polynomius& other) const {
-        int n = max((int)pl.size(), (int)other.pl.size());
-        vector<int> res(n, 0);
-        for (int i = 0; i < n; i++) {
-            if (i < (int)pl.size()) res[i] += pl[i];
-            if (i < (int)other.pl.size()) res[i] += other.pl[i];
+    Polynomials operator+(const Polynomials& other) {
+        Polynomials resp;
+        bool tipo;
+        if(other.size > size) {
+            tipo = true;
+            resp.pl = other.pl;
+            resp.size = other.size;
+        } else {
+            tipo = false;
+            resp.pl = pl;
+            resp.size = size;
         }
-        Polynomius p(res);
-        p.trim();
-        return p;
+        if(tipo) {
+            for(int i = 0; i < size; i++)
+                resp.pl[i] += pl[i];
+        } else {
+            for(int i = 0; i < other.size; i++)
+                resp.pl[i] += other.pl[i];
+        }
+        return resp;
     }
 
-    Polynomius operator-(const Polynomius& other) const {
-        int n = max((int)pl.size(), (int)other.pl.size());
-        vector<int> res(n, 0);
-        for (int i = 0; i < n; i++) {
-            if (i < (int)pl.size()) res[i] += pl[i];
-            if (i < (int)other.pl.size()) res[i] -= other.pl[i];
-        }
-        Polynomius p(res);
-        p.trim();
-        return p;
-    }
-
-    Polynomius operator*(const Polynomius& other) const {
-        if (pl.empty() || other.pl.empty())
-            return Polynomius({});
-        vector<int> res(pl.size() + other.pl.size() - 1, 0);
-        for (int i = 0; i < (int)pl.size(); i++) {
-            for (int j = 0; j < (int)other.pl.size(); j++) {
-                res[i + j] += pl[i] * other.pl[j];
-            }
-        }
-        Polynomius p(res);
-        p.trim();
-        return p;
-    }
-
-    Polynomius operator/(const Polynomius& other) const {
-        if (other.pl.empty() || other.pl.back() == 0)
-            throw invalid_argument("Divisão por polinômio nulo!");
-
-        vector<int> A = pl;
-        vector<int> B = other.pl;
-        vector<int> Q(max(0, (int)A.size() - (int)B.size() + 1), 0);
-        vector<int> R = A;
-
-        int m = (int)B.size() - 1;
-        int n = (int)A.size() - 1;
-
-        while ((int)R.size() - 1 >= m) {
-            int degDiff = (int)R.size() - 1 - m;
-            int coef = R.back() / B.back();
-            if (coef == 0) break;
-            Q[degDiff] = coef;
-
-            for (int i = 0; i <= m; i++)
-                R[i + degDiff] -= coef * B[i];
-
-            while (!R.empty() && R.back() == 0)
-                R.pop_back();
-        }
-
-        Polynomius q(Q);
-        q.trim();
-        return q;
-    }
-
-    Polynomius operator%(const Polynomius& other) const {
-        if (other.pl.empty() || other.pl.back() == 0)
-            throw invalid_argument("Divisão por polinômio nulo!");
-
-        vector<int> A = pl;
-        vector<int> B = other.pl;
-        vector<int> R = A;
-
-        int m = (int)B.size() - 1;
-        int n = (int)A.size() - 1;
-
-        while ((int)R.size() - 1 >= m) {
-            int degDiff = (int)R.size() - 1 - m;
-            int coef = R.back() / B.back();
-            if (coef == 0) break;
-
-            for (int i = 0; i <= m; i++)
-                R[i + degDiff] -= coef * B[i];
-
-            while (!R.empty() && R.back() == 0)
-                R.pop_back();
-        }
-
-        Polynomius r(R);
-        r.trim();
-        return r;
+    Polynomials operator/(const Polynomials& other) {
+        Polynomials resp;
+        return resp;
     }
 };
 
-ostream& operator<<(ostream& out, const Polynomius& p) {
-    if (p.pl.empty()) return out << 0;
-
-    for (int i = p.pl.size() - 1; i >= 0; i--) {
-        int c = p.pl[i];
-        if (c == 0) continue;
-
-        if (i != (int)p.pl.size() - 1) {
-            if (c > 0) out << " + ";
-            else out << " - ", c = -c;
-        } else if (c < 0) {
-            out << "-";
-            c = -c;
+ostream& operator<<(ostream& out, const Polynomials& poly) {
+    if(poly.pl[poly.size - 1] == 1 || poly.pl[poly.size - 1] == -1 && poly.pl[poly.size - 1]) {
+        if(poly.pl[poly.size - 1] > 0)
+            out << "x^" << poly.size - 1;
+        else
+            out << "-x^" << poly.size - 1;
+    } else {
+        if(poly.pl[poly.size - 1] > 0) {
+            out << poly.pl[poly.size - 1];
+            out << "x";
+            if(poly.size - 1 > 1)
+                out << "^" << poly.size - 1;
         }
-
-        if (i == 0 || c != 1) out << c;
-        if (i >= 1) out << "x";
-        if (i > 1) out << "^" << i;
+        else {
+            if(poly.pl[poly.size - 1] != 0)
+                out << poly.pl[poly.size - 1] << "x^" << poly.size - 1;
+        }
     }
+    for(int i = poly.size - 2; i >= 1; i--) {
+        if(poly.pl[i] == 0) continue;
+        if(poly.pl[i] > 0) {
+            out << " + ";
+            if(poly.pl[i] != 1)
+                out << poly.pl[i];
+            out << "x";
+            if(i > 1)
+                out << "^" << i;
+        } else {
+            out << " - ";
+            if(poly.pl[i] != -1)
+                out << -poly.pl[i];
+            out << "x";
+            if(i - 1 > 1)
+                out << "^" << i - 1;
+        }
+    }
+    if(poly.pl[0] == 0)
+        return out;
+    if(poly.pl[0]) 
+        out << " + " << poly.pl[0];
+    else
+        out << " - " << poly.pl[0];
     return out;
 }
 
 int32_t main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
-    vector<int> eq1 = {1, 2, 3, 4};
-    vector<int> eq2 = {3, 2};
-
-    Polynomius p1(eq1);
-    Polynomius p2(eq2);
-
-    cout << "P1(x) = " << p1 << "\n";
-    cout << "P2(x) = " << p2 << "\n\n";
-
-    cout << "Soma:          " << (p1 + p2) << "\n";
-    cout << "Subtração:     " << (p1 - p2) << "\n";
-    cout << "Multiplicação: " << (p1 * p2) << "\n";
-    cout << "Quociente:     " << (p1 / p2) << "\n";
-    cout << "Resto:         " << (p1 % p2) << "\n";
+    vector<int> eq1 = {1, 2, 3, 4}; // 4x^3 + 3x^2 + 2x + 1
+    vector<int> eq2 = {3, 2}; // x^3 + 2x^2 + 3x + 4
+    Polynomials pl1(eq1);
+    Polynomials pl2(eq2);
+    cout << pl1 << "\n";
+    cout << pl2 << "\n";
+    Polynomials ans = pl1 + pl2;
+    cout << ans << "\n";
 }
