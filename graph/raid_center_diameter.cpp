@@ -80,6 +80,7 @@ tuple<int, int, int> diam_raio_centro(int u) {
 }
 
 /* Versão para grafos
+Obs: Ao tratar com grafos ponderados use Dijkstra.
 tuple<int,int,int> diam_raio_centro(int n){
     vector<int> ecc(n + 1);
     int diametro = 0;
