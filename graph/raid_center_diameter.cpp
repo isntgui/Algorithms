@@ -79,6 +79,46 @@ tuple<int, int, int> diam_raio_centro(int u) {
     return {diametro, raio, centro};
 }
 
+/* Versão para grafos
+tuple<int,int,int> diam_raio_centro(int n){
+    vector<int> ecc(n + 1);
+    int diametro = 0;
+    int raio = INF;
+    int centro = -1;
+    for(int s = 1; s <= n; s++){
+        fill(dist, dist + n + 1, -1);
+        queue<int> q;
+        q.push(s);
+        dist[s] = 0;
+        while(!q.empty()){
+            int u = q.front();
+            q.pop();
+            for(int v : adj[u]){
+                if(dist[v] == -1){
+                    dist[v] = dist[u] + 1;
+                    q.push(v);
+                }
+            }
+        }
+        int mx = 0;
+        for(int i = 1; i <= n; i++){
+            if(dist[i] == -1){
+                mx = INF;
+                break;
+            }
+            mx = max(mx, dist[i]);
+        }
+        ecc[s] = mx;
+        diametro = max(diametro, mx);
+        if(mx < raio){
+            raio = mx;
+            centro = s;
+        }
+    }
+    return {diametro, raio, centro};
+}
+*/
+
 int32_t main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
