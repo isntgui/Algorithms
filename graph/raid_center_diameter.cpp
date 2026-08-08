@@ -103,11 +103,8 @@ tuple<int,int,int> diam_raio_centro(int n){
         }
         int mx = 0;
         for(int i = 1; i <= n; i++){
-            if(dist[i] == -1){
-                mx = INF;
-                break;
-            }
-            mx = max(mx, dist[i]);
+            if(dist[i] != -1)
+                mx = max(mx, dist[i]);
         }
         ecc[s] = mx;
         diametro = max(diametro, mx);
