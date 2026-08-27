@@ -1,37 +1,35 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define int long long
-#define lsb(a) (a)&-(a)
+#define int long long int
 
-const int mxn=1e5+10;
+struct BIT {
+    #define lsb(a) (a) & -(a)
+    vector<int> ft;
+    int len;
 
-int a[mxn], ft[mxn], n, q, r, l;
-
-void upd(int i, int v) {
-    // i+1 caso o vetor seja indexado em 0, caso contrario não precisa
-    for(++i; i<=n; i+=lsb(i))
-        ft[i]+=v;
-}
-
-int qry(int i) {
-    int ret = 0;
-    for(++i; i; i-=lsb(i))
-        ret+=ft[i];
-    return ret;
-}
-
-// Busca Binaria na estrutura de dados bit
-int bs_bit(int v) {
-    int s=0, p=0;
-    for(int i=30; i>=0; --i) {
-            if (p + (1 << i) <= n && s + ft[p + (1 << i)] <= v) {
-                s += ft[p + (1 << i)];
-                p += (1 << i);
-}
+    BIT(int n) : len(n) {
+        ft.resize(n + 1, 0);
     }
-    return p;
-}
+
+    BIT(vector<int> const& a) : BIT(a.size()) {
+        for (int i = 0; i < (int)a.size(); i++)
+            update(i, a[i]);
+    }
+
+    void update(int i, int v) {
+        // i+1 para 1-based
+        for (i++; i <= len; i += lsb(i))
+            ft[i] += v;
+    }
+
+    int query(int i) {
+        int ans = 0;
+        for (i++; i; i -= lsb(i))
+            ans += ft[i];
+        return ans;
+    }
+};
 
 int32_t main() {
     ios::sync_with_stdio(0);
