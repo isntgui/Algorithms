@@ -1,57 +1,58 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-const int mxn=1e5+10;
+struct SegmentTree {
+    vector<int> st, a;
+    int n, NEUTRAL_ELEMENT = 0;
 
-int n, q, st[4*mxn], a[mxn];
-
-int func(int a, int b) {
-    return a+b;
-    // return max(a, b), min(a, b);
-}
-
-void bld(int node, int l, int r) {
-    if(l==r) {
-        st[node] = a[l];
-        return ;
+    SegmentTree(vector<int>& v) : n((int)v.size()), a(v) {
+        st.assign(4 * (n + 1) + 5, 0);
+        build(1, 1, n);
     }
-    int mid = (l+r)/2;
-    bld(2*node, l, mid);
-    bld(2*node+1, mid+1, r);
-    st[node] = func(st[2*node], st[2*node+1]);
-}
 
-void upd(int node, int l, int r, int i, int v) {
-    if(l==r) {
-        st[node] = v;
-        return ;
+    int merge(int a, int b) {
+        return a + b;
     }
-    int mid = (l+r)/2;
-    if(i<=mid)
-        upd(2*node, l, mid, i, v);
-    else
-        upd(2*node+1, mid+1, r, i, v);
-    st[node] = func(st[2*node], st[2*node+1]);
-}
 
-int qry(int node, int l, int r, int i, int j) {
-    if(i<=l&&j>=r)
-        return st[node];
-    if(j<l||i>r)
-        return 0;
-    int mid = (l+r)/2;
-    return func(qry(2*node, l, mid, i, j), qry(2*node+1, mid+1, r, i, j));
-}
+    void build(int node, int l, int r) {
+        if (l == r) {
+            st[node] = a[l];
+            return;
+        }
+        int mid = (l + r) / 2;
+        build(2 * node, l, mid);
+        build(2 * node + 1, mid + 1, r);
+        st[node] = merge(st[2 * node], st[2 * node + 1]);
+    }
 
-int bs_seg(int node, int l, int r, int k) {
-    if (st[node] < k) return -1;
-    if (l == r) return l;
-    int m = (l + r) / 2;
-    if (st[2*node] >= k)
-        return bs_seg(2*node, l, m, k);
-    else
-        return bs_seg(2*node+1, m+1, r, k - st[2*node]);
-}
+    void update(int node, int l, int r, int i, int j) {
+        if (r < i || l > j)
+            return;
+        int mid = (l + r) / 2;
+        if (i <= mid)
+            update(2 * node, l, mid, i, j);
+        else
+            update(2 * node + 1, mid + 1, r, i, j);
+        st[node] = merge(st[2 * node], st[2 * node + 1]);
+    }
+
+    int query(int node, int l, int r, int i, int j) {
+        if (i <= l && j >= r)
+            return st[node];
+        if (j < l || i > r)
+            return NEUTRAL_ELEMENT;
+        int mid = (l + r) / 2;
+        return merge(query(2 * node, l, mid, i, j), query(2 * node + 1, mid + 1, r, i, j));
+    }
+
+    void update(int a, int b) {
+        update(1, 1, n, a, b);
+    }
+
+    int query(int a, int b) {
+        return query(1, 1, n, a, b);
+    }
+};
 
 int main() {
     ios::sync_with_stdio(0);
