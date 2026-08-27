@@ -37,10 +37,10 @@ struct SegmentTree {
     }
 
     int query(int node, int l, int r, int i, int j) {
-        if (i <= l && j >= r)
-            return st[node];
         if (j < l || i > r)
             return NEUTRAL_ELEMENT;
+        if (i <= l && j >= r)
+            return st[node];
         int mid = (l + r) / 2;
         return merge(query(2 * node, l, mid, i, j), query(2 * node + 1, mid + 1, r, i, j));
     }
