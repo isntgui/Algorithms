@@ -1,43 +1,28 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-vector<int> adj[1011];
-int n, m, ini, fim;
+bool vis[110];
+vector<vector<int>> adj;
 
-string bfs(int w, int f) {
-	vector<bool> v(n+1, 0);
-	v[w]=1;
+void bfs(int st) {
 	queue<int> q;
-	q.push(w);
-	while(q.size()>0) {
-		int u=q.front(); q.pop();
-		for(auto &x : adj[u]) {
-			if(!v[x]) {
-				v[x] = 1;
-				q.push(x);
+	q.push(st);
+	vis[st] = true;
+	while (!q.empty()) {
+		auto u = q.front();
+		q.pop();
+		for (auto v : adj[u]) {
+			if (!vis[v]) {
+				q.push(v);
+				vis[v] = true;
 			}
 		}
 	}
-	return (v[f]?"Encontrado":"Nao econtrado");
 }
 
-void solve() {
-	cin >> n >> m;
-	for(int i=0, x, y; i<m; ++i) {
-		cin >> x >> y;
-		adj[x].push_back(y);
-		adj[y].push_back(x);
-	}
-	cin >> ini >> fim;
-	cout << bfs(ini, fim) << "\n";
-}
+int32_t main() {
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
 
-int main() {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
-	cout.tie(0);
-
-	int t=1;
-	// cin >> t;
-	while(t--) solve();
+	;
 }

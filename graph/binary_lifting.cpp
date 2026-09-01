@@ -5,13 +5,13 @@ using namespace std;
 
 const int mxn = 1e5+10, mxl = 20;
 
-int n, q, up[mxn][mxl], depth[mxn];
+int n, q, up[mxn][mxl], dpt[mxn];
 vector<int> adj[mxn];
 
 void dfs(int u, int p) {
-	depth[u] = depth[p]+1;
+	dpt[u] = dpt[p] + 1;
 	up[u][0] = p;
-	for(int i=1; i<mxl; i++)
+	for(int i = 1; i < mxl; i++)
 		up[u][i] = up[up[u][i-1]][i-1];
 	for(int v : adj[u])
 		if(v!=p)
@@ -19,9 +19,9 @@ void dfs(int u, int p) {
 }
 
 int bl(int u, int k) {
-	if(depth[u]<k) return -1;
-	for(int i=mxl-1; i>=0; i--)
-		if((k>>i)&1)
+	if(dpt[u] < k) return -1;
+	for(int i = mxl-1; i >= 0; i--)
+		if((k >> i) & 1)
 			u = up[u][i];
 	return u;
 }
@@ -37,7 +37,7 @@ int32_t main() {
 		adj[a].push_back(b);
 		adj[b].push_back(a);
 	}
-	depth[0] = -1;
+	dpt[0] = -1;
 	dfs(1, 0);
 	while(q--) {
 		int u, k;

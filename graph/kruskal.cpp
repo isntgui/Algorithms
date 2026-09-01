@@ -1,73 +1,61 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define F first
-#define S second
+const int mxn = 1e5 + 10;
 
-typedef pair<int, pair<int, int>> edge;
+int n, m;
+int pai[mxn], sz[mxn];
+vector<tuple<int, int, int>> edges;
 
-class UionFind {
-private:
-	vector<int> parent, rank;
-public:
-	UionFind(int n) {
-		parent.assign(n+1, 0);
-		rank.assign(n+1, 0);
-		for(int i=0; i<=n; ++i) parent[i]=i;
-	}
-	int find(int i) {
-		return (parent[i]==i) ? i : (parent[i]=find(parent[i]));
-	}
-	bool comp(int i, int j) {
-		return find(i)==find(j);
-	}
-	void unioSet(int i, int j) {
-		if(!comp(i, j)) {
-			int x = find(i), y=find(j);
-			if(rank[x]>rank[y])
-				parent[y] = x;
-			else {
-				parent[x] = y;
-				if(rank[x]==rank[y])
-					++rank[y];
-			}
-		}
-	}
-};
-
-int kruskal(int n, const vector<edge> &adj) {
-	UionFind UF(n);
-	int ans = 0;
-	for(auto e : adj) {
-		int u=e.S.F, w=e.S.S;
-		if(!UF.comp(u, w)) {
-			UF.unioSet(u, w);
-			ans+=e.F;
-		}
-	}
-	return ans;
+void init() {
+    for (int i = 1; i <= n; i++) {
+        pai[i] = i;
+        sz[i] = 1;
+    }
 }
 
-void solve() {
-	int v, a;
-	while(cin >> v >> a && v) {
-		vector<edge> adj;
-		for(int i=0, u, w, p; i<a; ++i) {
-			cin >> u >> w >> p;
-			adj.push_back({p, {u, w}});
-		}
-		sort(adj.begin(), adj.end());
-		int eit = kruskal(v, adj);
-		cout << eit << "\n";
-	}
+int find(int u) {
+    return pai[u] == u ? u : pai[u] = find(pai[u]);
 }
 
-int main() {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
-	cout.tie(0);	
-	int t=1;
-	// cin >> t;
-	while(t--) 
-		solve();
+bool unite(int u, int v) {
+    u = find(u);
+    v = find(v);
+
+    if (u == v)
+        return false;
+
+    if (sz[u] < sz[v])
+        swap(u, v);
+
+    pai[v] = u;
+    sz[u] += sz[v];
+
+    return true;
+}
+
+long long kruskal() {
+    sort(edges.begin(), edges.end());
+
+    init();
+
+    long long ans = 0;
+    int cnt = 0;
+
+    for (auto [u, v, w] : edges) {
+        if (unite(u, v)) {
+            ans += w;
+            cnt++;
+        }
+    }
+
+    if (cnt != n - 1)
+        return -1;
+
+    return ans;
+}
+
+int32_t main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 }

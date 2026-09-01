@@ -1,61 +1,76 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// Mo's algorithm, O((N + Q) * sqrt(N))
-// queries offline
+struct Mo {
+    struct Query {
+        int l, r, id;
+    };
 
-constexpr int mxn = 1e5+10;
+    int n, block;
+    vector<Query> queries;
+    vector<int> ans;
 
-int n, q;
-int arr[mxn];
-long long ans[mxn];
-long long currSum;
-int block;
+    vector<int> a;
+    int sum = 0;
 
-struct Query {
-    int left, right, index;
+    Mo(const vector<int>& a) : n((int)a.size()), a(a) {
+        block = max(1, (int)sqrt(n));
+    }
 
-    bool operator<(const Query& other) const {
-        if(left / block != other.left / block)
-            return left / block < other.left / block;
-        return right < other.right;
+    void add_query(int l, int r) {
+        queries.push_back({l, r, (int)queries.size()});
+    }
+
+    void process() {
+        int q = queries.size();
+
+        ans.resize(q);
+
+        sort(queries.begin(), queries.end(), [&](const Query& a, const Query& b) {
+            int block_a = a.l / block;
+            int block_b = b.l / block;
+
+            if (block_a != block_b)
+                return block_a < block_b;
+
+            return a.r < b.r;
+        });
+
+        int L = 0, R = -1;
+
+        for (auto [l, r, id] : queries) {
+            while (L > l)
+                add(--L);
+
+            while (R < r)
+                add(++R);
+
+            while (L < l)
+                remove(L++);
+
+            while (R > r)
+                remove(R--);
+
+            ans[id] = get_answer();
+        }
+    }
+
+    void add(int i) {
+        sum += a[i];
+    }
+
+    void remove(int i) {
+        sum -= a[i];
+    }
+
+    int get_answer() {
+        return sum;
     }
 };
-
-void add(int x) {
-    currSum += x;
-}
-
-void remove(int x) {
-    currSum -= x;
-}
 
 int32_t main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    cin >> n >> q;
-    for(int i=1; i<=n; i++)
-        cin >> arr[i];
-    block = sqrt(n);
-    vector<Query> qry(q);
-    for(int i=0; i<q; i++) {
-        cin >> qry[i].left >> qry[i].right; // 1-based
-        qry[i].index = i;
-    }
-    sort(qry.begin(), qry.end());
-    int currL = 1, currR = 0;
-    currSum = 0;
-    for(auto q : qry) {
-        while(currL > q.left)
-            add(arr[--currL]);
-        while(currR < q.right)
-            add(arr[++currR]);
-        while(currL < q.left)
-            remove(arr[currL++]);
-        while(currR > q.right)
-            remove(arr[currR--]);
-        ans[q.index] = currSum;
-    }
-    for(int i=0; i<q; i++)
-        cout << ans[i] << "\n";
+
+    ;
 }

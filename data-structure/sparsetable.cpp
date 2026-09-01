@@ -3,45 +3,63 @@ using namespace std;
 
 #define int long long
 
-const int mxn = 1e4 + 10, mxl = 31;
+struct SparseTable {
+    vector<vector<int>> st;
+    vector<int> lg;
+    int n;
 
-int sp[mxn][mxl], a[mxn], n, q;
+    SparseTable(const vector<int>& a) : n((int)a.size()) {
+        int K = __lg(n) + 1;
 
-void bld() {
-    for(int i = 1; i <= n; ++i)
-        sp[i][0] = a[i];
-    for(int j = 1; j < mxl; ++j) {
-        for(int i = 1; i <= n; ++i) {
-            if(i + (1 << j) - 1 > n) break;
-            sp[i][j] = sp[i][j-1] + sp[i + (1 << (j-1))][j-1];
-            // sp[i][j] = min(sp[i][j-1], sp[i + (1 << (j-1))][j-1]);
+        st.assign(K, vector<int>(n));
+        lg.resize(n + 1);
+
+        for (int i = 2; i <= n; i++)
+            lg[i] = lg[i / 2] + 1;
+
+        for (int i = 0; i < n; i++)
+            st[0][i] = a[i];
+
+        for (int k = 1; k < K; k++) {
+            for (int i = 0; i + (1 << k) <= n; i++) {
+                st[k][i] = merge(
+                    st[k - 1][i],
+                    st[k - 1][i + (1 << (k - 1))]
+                );
+            }
         }
     }
-}
 
-int log_n(int x) {
-    return 63 - __builtin_clzll(x);
-}
+    int merge(int a, int b) {
+        return min(a, b);
+    }
+
+    int query_RMQ(int l, int r) {
+        int k = lg[r - l + 1];
+
+        return merge(
+            st[k][l],
+            st[k][r - (1 << k) + 1]
+        );
+    }
+
+    // int query_RSQ(int l, int r) {
+    //     int ans = 0;
+
+    //     for (int k = __lg(r - l + 1); k >= 0; k--) {
+    //         if ((1 << k) <= r - l + 1) {
+    //             ans += st[k][l];
+    //             l += 1 << k;
+    //         }
+    //     }
+
+    //     return ans;
+    // }
+};
 
 int32_t main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
     
-    cin >> n >> q;
-    for(int i = 1; i <= n; ++i)
-        cin >> a[i];
-    bld();
-    while(q--) {
-        int l, r;
-        cin >> l >> r;
-        int k = log_n(r - l + 1);
-        int ans = 0;
-        for(int i=k; i>=0; --i) {
-            if((1<<i) <= (r-l+1))
-                ans+=sp[l][i], l+=(1<<i);
-        }
-        // cout << min(sp[l][k], sp[r-(1<<k)+1][k]) << "\n";
-        cout << ans << "\n";
-    }
 }

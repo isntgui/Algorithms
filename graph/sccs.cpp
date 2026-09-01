@@ -3,120 +3,103 @@ using namespace std;
 
 // Código Tarjan
 
-int id = 0, n, m;
-vector<vector<int>> adj;
-vector<int> ids, low;
-vector<bool> onStack;
-stack<int> s;
-vector<vector<int>> sccs;
+const int mxn = 2e5 + 5;
 
-void dfs(int w) {
-    s.push(w);
-    onStack[w] = 1;
-    ids[w] = low[w] = id++;
+vector<int> adj[mxn];
+vector<int> st;
 
-    for (int to : adj[w]) {
-        if (ids[to] == -1) {
-            dfs(to);
-            low[w] = min(low[w], low[to]);
-        } else if (onStack[to]) {
-            low[w] = min(low[w], ids[to]);
+int timer = 0, scc_cnt = 0;
+int tin[mxn], low[mxn], comp[mxn];
+bool in_stack[mxn];
+
+void dfs(int u) {
+    tin[u] = low[u] = timer++;
+
+    st.push_back(u);
+    in_stack[u] = true;
+
+    for (int v : adj[u]) {
+        if (tin[v] == -1) {
+            dfs(v);
+            low[u] = min(low[u], low[v]);
+        } else if (in_stack[v]) {
+            low[u] = min(low[u], tin[v]);
         }
     }
 
-    if (ids[w] == low[w]) {
-        vector<int> scc;
+    if (low[u] == tin[u]) {
         while (true) {
-            int node = s.top();
-            s.pop();
-            onStack[node] = false;
-            scc.push_back(node);
-            low[node] = ids[w];
-            if (node == w) break;
+            int v = st.back();
+            st.pop_back();
+
+            in_stack[v] = false;
+            comp[v] = scc_cnt;
+
+            if (v == u)
+                break;
         }
-        sccs.push_back(scc);
+
+        scc_cnt++;
     }
 }
 
-void setsccs() {
-    adj.resize(n);
-    ids.resize(n, -1);
-    low.resize(n);
-    onStack.resize(n, false);
+void tarjan(int n) {
+    fill(tin, tin + n, -1);
+
+    for (int u = 0; u < n; u++)
+        if (tin[u] == -1)
+            dfs(u);
 }
 
-int main() {
-    cin >> n >> m;
-    setsccs();
-    for(int i=0; i<m; ++i) {
-        int a, b;
-        cin >> a >> b;
-        adj[a].push_back(b);
-    }
-    for (int i=0; i<n; ++i) {
-        if (ids[i] == -1) {
-            dfs(i);
-        }
-    }
-    cout << "Componentes Fortemente Conectadas:\n";
-    for (const auto& scc : sccs) {
-        for (int node : scc) {
-            cout << node << " ";
-        }
-        cout << "\n";
-    }
+// Código Kosaraju
+
+const int mxn = 2e5 + 5;
+
+vector<int> adj[mxn], radj[mxn];
+vector<int> order;
+
+int comp[mxn];
+bool vis[mxn];
+
+void dfs1(int u) {
+    vis[u] = true;
+
+    for (int v : adj[u])
+        if (!vis[v])
+            dfs1(v);
+
+    order.push_back(u);
 }
 
-// Código Kosajaru
+void dfs2(int u, int id) {
+    vis[u] = true;
+    comp[u] = id;
 
-#include<bits/stdc++.h>
-using namespace std;
-
-const int mxn = 1e4+10;
-
-int n, components[mxn], visitados[mxn];
-vector<int> grafo[mxn], reverso[mxn], saida;
-
-void dfs1(int w) {
-    visitados[w]=1;
-    for(auto vz : grafo[w])
-        if(visitados[vz]==0)
-            dfs1(vz);
-    saida.emplace_back(w);
+    for (int v : radj[u])
+        if (!vis[v])
+            dfs2(v, id);
 }
 
-void dfs2(int w, int c) {
-    visitados[w] = 2;
-    components[w] = c;
-    for(int vz : reverso[w])
-        if(visitados[vz]==1)
-            dfs2(vz, c);
-}
+int kosaraju(int n) {
+    order.clear();
+    fill(vis, vis + n, false);
 
-int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
+    for (int u = 0; u < n; u++)
+        if (!vis[u])
+            dfs1(u);
 
-    cin >> n;
-    for(int i=0; i<n; ++i) {
-        int a, b;
-        cin >> a >> b;
-        grafo[a].emplace_back(b);
-        reverso[b].emplace_back(a);
-    }
-    for(int i=1; i<=n; ++i)
-        if(visitados[i]==0)
-            dfs1(i);
-    int componente = 0;
-    for(int i=(int)saida.size()-1; i>=0; --i) {
-        if(visitados[saida[i]]==1) {
-            ++componente;
-            dfs2(saida[i], componente);
+    fill(vis, vis + n, false);
+
+    reverse(order.begin(), order.end());
+
+    int scc_cnt = 0;
+
+    for (int u : order) {
+        if (!vis[u]) {
+            dfs2(u, scc_cnt);
+            scc_cnt++;
         }
     }
-    for(int i=1; i<=n; ++i) {
-        cout << components[i] << " ";
-    }
-    cout << "\n";
+
+    return scc_cnt;
 }
