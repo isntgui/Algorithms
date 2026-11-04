@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+struct Point {int x, y;};
+
 bool inside(Point p, vector<Point>& poly) {
     bool in = false;
     int n = poly.size();
